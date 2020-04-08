@@ -58,7 +58,7 @@ function check_archive_mountable () {
       then
         secopt="sec=$sec"
       fi
-      local commandline="mount -t cifs '//$1:3445/$2' '$test_mount_location' -o 'credentials=${tmp_credentials_file_path},iocharset=utf8,file_mode=0777,dir_mode=0777,$versopt,$secopt'"
+      local commandline="mount -t cifs '//$1/$2' '$test_mount_location' -o 'credentials=${tmp_credentials_file_path},iocharset=utf8,file_mode=0777,dir_mode=0777,port=3445,$versopt,$secopt'"
       log_progress "Trying mount command-line:"
       log_progress "$commandline"
       if eval "$commandline"
@@ -119,7 +119,7 @@ function configure_archive () {
   if ! grep -w -q "$archive_path" /etc/fstab
   then
     local sharenameforstab="${sharename// /\\040}"
-    echo "//$archiveserver:3445/$sharenameforstab $archive_path cifs credentials=${credentials_file_path},iocharset=utf8,file_mode=0777,dir_mode=0777,$VERS_OPT,$SEC_OPT 0" >> /etc/fstab
+    echo "//$archiveserver/$sharenameforstab $archive_path cifs credentials=${credentials_file_path},iocharset=utf8,port=3445,file_mode=0777,dir_mode=0777,$VERS_OPT,$SEC_OPT 0" >> /etc/fstab
   fi
 
   if [ -n "${musicsharename:+x}" ]
@@ -131,7 +131,7 @@ function configure_archive () {
     if ! grep -w -q "$music_archive_path" /etc/fstab
     then
       local musicsharenameforstab="${musicsharename// /\\040}"
-      echo "//$archiveserver:3445/$musicsharenameforstab $music_archive_path cifs credentials=${credentials_file_path},iocharset=utf8,file_mode=0777,dir_mode=0777,$VERS_OPT,$SEC_OPT 0" >> /etc/fstab
+      echo "//$archiveserver/$musicsharenameforstab $music_archive_path cifs credentials=${credentials_file_path},port=3445,iocharset=utf8,file_mode=0777,dir_mode=0777,$VERS_OPT,$SEC_OPT 0" >> /etc/fstab
     fi
   fi
 
